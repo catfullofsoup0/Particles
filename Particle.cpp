@@ -1,5 +1,21 @@
 #include "Particle.h"
 
+// Emily's work starts here
+
+Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
+{
+    m_ttl = TTL;
+    m_numPoints = numPoints;
+    m_radiansPerSec = ((float)rand()/(RAND_MAX)) * PI; // could be wrong cuz too compact and idk whats happening
+    setCenter(0,0);
+    setSize(target.getSize().x, (-1.0) * target.getSize().y);
+    m_centerCoordinate = target.mapPixelToCoords(m_cartesianPlane); // could be wrong
+    //m_vx = ; // next task: set rand btwn 100 and 500
+    //m_vy = ;
+}
+
+// Emily's work ends here (sob)
+
 
 bool Particle::almostEqual(double a, double b, double eps)
 {

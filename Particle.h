@@ -9,6 +9,7 @@ const float SCALE = 0.999;
 
 using namespace Matrices;
 using namespace sf;
+using namespace std;
 class Particle : public Drawable
 {
 public:
