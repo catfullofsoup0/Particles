@@ -5,24 +5,24 @@
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
 {
     vector<int> c(6); // 2 sets of color values in RGB format
-    for (int i = 0; i < c.size(); i++) { c.at(i) = rand(256); }
+    for (int i = 0; i < c.size(); i++) { c.at(i) = rand() % 256; }
 
     m_ttl = TTL;
     m_numPoints = numPoints;
-    m_radiansPerSec = ((float)rand()/(RAND_MAX)) * PI; // could be wrong cuz too compact and idk whats happening
-    setCenter(0,0);
-    setSize(target.getSize().x, (-1.0) * target.getSize().y);
+    m_radiansPerSec = ((float)rand()/(RAND_MAX)) * M_PI; // could be wrong cuz too compact and idk whats happening
+    m_cartesianPlane.setCenter(0,0);
+    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
     m_centerCoordinate = target.mapPixelToCoords(m_cartesianPlane); // could be wrong
-    m_vx = 100 + rand(401);
-    m_vy = 100 + rand(401);
+    m_vx = rand() % (500 + 1 - 100) + 100; // ranged rand() formula: rand() % (max + 1 - min) + min
+    m_vy = rand() % (500 + 1 - 100) + 100;
     m_color1 = Color(c[0], c[1], c[2], 255);
     m_color2 = Color(c[3], c[4], c[5], 255);
-    int theta = rand(PI / 2);
-    int dTheta = 2 * PI / (numPoints - 1);
+    int theta = rand() % (M_PI / 2);
+    int dTheta = 2 * M_PI / (numPoints - 1);
 
     for (int j = 0; j < numPoints; j++)
     {
-        int r = rand(60) + 20;
+        int r = rand() % (80 + 1 - 20) + 20;
         int dx = r * cos(theta);
         int dy = r * sin(theta);
         m_A(0, j) = m_centerCoordinate.x + dx;
@@ -31,7 +31,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     }
 }
 
-Particle::draw(RenderTarget& target, RenderStates states) const
+void Particle::draw(RenderTarget& target, RenderStates states) const
 {
     VertexArray lines(TriangleFan, numPoints + 1);
     Vector2f center = m_centerCoordinate(target.mapCoordsToPixel(m_cartesianPlane));
@@ -46,6 +46,8 @@ Particle::draw(RenderTarget& target, RenderStates states) const
 }
 
 // Emily's work ends here
+
+// Cheema pls do update() function
 
 
 bool Particle::almostEqual(double a, double b, double eps)
