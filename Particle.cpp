@@ -4,17 +4,48 @@
 
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
 {
+    vector<int> c(6); // 2 sets of color values in RGB format
+    for (int i = 0; i < c.size(); i++) { c.at(i) = rand(256); }
+
     m_ttl = TTL;
     m_numPoints = numPoints;
     m_radiansPerSec = ((float)rand()/(RAND_MAX)) * PI; // could be wrong cuz too compact and idk whats happening
     setCenter(0,0);
     setSize(target.getSize().x, (-1.0) * target.getSize().y);
     m_centerCoordinate = target.mapPixelToCoords(m_cartesianPlane); // could be wrong
-    //m_vx = ; // next task: set rand btwn 100 and 500
-    //m_vy = ;
+    m_vx = 100 + rand(401);
+    m_vy = 100 + rand(401);
+    m_color1 = Color(c[0], c[1], c[2], 255);
+    m_color2 = Color(c[3], c[4], c[5], 255);
+    int theta = rand(PI / 2);
+    int dTheta = 2 * PI / (numPoints - 1);
+
+    for (int j = 0; j < numPoints; j++)
+    {
+        int r = rand(60) + 20;
+        int dx = r * cos(theta);
+        int dy = r * sin(theta);
+        m_A(0, j) = m_centerCoordinate.x + dx;
+        m_A(1, j) = m_centerCoordinate.y + dy;
+        theta += dTheta;
+    }
 }
 
-// Emily's work ends here (sob)
+Particle::draw(RenderTarget& target, RenderStates states) const
+{
+    VertexArray lines(TriangleFan, numPoints + 1);
+    Vector2f center = m_centerCoordinate(target.mapCoordsToPixel(m_cartesianPlane));
+    lines[0].position = center;
+    lines[0].color = m_color;
+    for (int j = 1; j < m_numPoints; j++)
+    {
+        lines[j].position = target.mapCoordsToPixel(m_A(j-1)); // unfinished probably wrong
+        lines[j].color = m_Color2;
+    }
+    target.draw(lines);
+}
+
+// Emily's work ends here
 
 
 bool Particle::almostEqual(double a, double b, double eps)
