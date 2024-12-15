@@ -17,7 +17,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_vy = rand() % (500 + 1 - 100) + 100;
     m_color1 = Color(c[0], c[1], c[2], 255);
     m_color2 = Color(c[3], c[4], c[5], 255);
-    int theta = rand() % (M_PI / 2);
+    int theta = (float)rand() / (RAND_MAX) * M_PI / 2;
     int dTheta = 2 * M_PI / (numPoints - 1);
 
     for (int j = 0; j < numPoints; j++)
@@ -39,8 +39,8 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
     lines[0].color = m_color;
     for (int j = 1; j < m_numPoints; j++)
     {
-        lines[j].position = target.mapCoordsToPixel(m_A(j-1)); // unfinished probably wrong
-        lines[j].color = m_Color2;
+        lines[j].position = (Vector2f)target.mapCoordsToPixel(coords, m_cartesianPlane);
+        lines[j].color = m_color2;
     }
     target.draw(lines);
 }
