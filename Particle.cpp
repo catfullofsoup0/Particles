@@ -1,5 +1,37 @@
 #include "Particle.h"
+Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
+{
+    vector<int> c(6); // 2 sets of color values in RGB format
+    for (int i = 0; i < c.size(); i++) { c.at(i) = rand() % 256; }
 
+    m_ttl = TTL;
+    m_numPoints = numPoints;
+    m_radiansPerSec = ((float)rand() / RAND_MAX) * M_PI; // Random radians per second
+    m_cartesianPlane.setCenter(0, 0);
+    m_cartesianPlane.setSize(static_cast<float>(target.getSize().x), -static_cast<float>(target.getSize().y));
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
+
+    m_vx = rand() % 401 + 100; // Range: [100, 500]
+    m_vy = rand() % 401 + 100;
+
+    m_color1 = Color(c[0], c[1], c[2], 255);
+    m_color2 = Color(c[3], c[4], c[5], 255);
+
+    float theta = ((float)rand() / RAND_MAX) * M_PI / 2.0f;
+    float dTheta = 2 * M_PI / numPoints;
+
+    for (int j = 0; j < numPoints; j++)
+    {
+        int r = rand() % 61 + 20; // Radius: [20, 80]
+        int dx = static_cast<int>(r * cos(theta));
+        int dy = static_cast<int>(r * sin(theta));
+
+        m_A(0, j) = m_centerCoordinate.x + dx;
+        m_A(1, j) = m_centerCoordinate.y + dy;
+        theta += dTheta;
+    }
+}
+/*
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
 {
     vector<int> c(6); // 2 sets of color values in RGB format
@@ -28,6 +60,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
         theta += dTheta;
     }
 } 
+*/
 
 void Particle::draw(RenderTarget& target, RenderStates states) const
 {
