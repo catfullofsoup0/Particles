@@ -1,7 +1,5 @@
 #include "Particle.h"
 
-// Emily's work starts here
-
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
 {
     vector<int> c(6); // 2 sets of color values in RGB format
@@ -12,12 +10,12 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_radiansPerSec = ((float)rand()/(RAND_MAX)) * M_PI; // could be wrong cuz too compact and idk whats happening
     m_cartesianPlane.setCenter(0,0);
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
-    m_centerCoordinate = target.mapPixelToCoords(m_cartesianPlane); // could be wrong
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane); // could be wrong
     m_vx = rand() % (500 + 1 - 100) + 100; // ranged rand() formula: rand() % (max + 1 - min) + min
     m_vy = rand() % (500 + 1 - 100) + 100;
     m_color1 = Color(c[0], c[1], c[2], 255);
     m_color2 = Color(c[3], c[4], c[5], 255);
-    int theta = (float)rand() / (RAND_MAX) * M_PI / 2;
+    int theta = (float)rand() / (RAND_MAX) * M_PI / 2.0f;
     int dTheta = 2 * M_PI / (numPoints - 1);
 
     for (int j = 0; j < numPoints; j++)
@@ -29,25 +27,23 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
         m_A(1, j) = m_centerCoordinate.y + dy;
         theta += dTheta;
     }
-}
+} 
 
 void Particle::draw(RenderTarget& target, RenderStates states) const
 {
-    VertexArray lines(TriangleFan, numPoints + 1);
-    Vector2f center = m_centerCoordinate(target.mapCoordsToPixel(m_cartesianPlane));
+    VertexArray lines(TriangleFan, m_numPoints + 1);
+    Vector2f center(target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane));
     lines[0].position = center;
-    lines[0].color = m_color;
+    lines[0].color = m_color1;
     for (int j = 1; j < m_numPoints; j++)
     {
+        Vector2f coords(m_A(0, j-1), m_A(1, j-1));
         lines[j].position = (Vector2f)target.mapCoordsToPixel(coords, m_cartesianPlane);
         lines[j].color = m_color2;
     }
     target.draw(lines);
 }
 
-// Emily's work ends here
-
-// Cheema pls do update() function
 void Particle::update(float dt) {
     //looping happens in the engine.cpp
     m_ttl -= dt; // Reduce time-to-live
