@@ -1,5 +1,5 @@
 #include "Particle.h"
-
+//hi
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition) : m_A(2, numPoints)
 {
     vector<int> c(6); // 2 sets of color values in RGB format
