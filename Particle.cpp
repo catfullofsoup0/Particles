@@ -35,6 +35,25 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
     Vector2f center(target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane));
     lines[0].position = center;
     lines[0].color = m_color1;
+
+    for (int j = 1; j <= m_numPoints; j++) // Loop now starts at 1 and goes up to m_numPoints
+    {
+        Vector2f column_coordinate = sf::Vector2f(m_A(0, j - 1), m_A(1, j - 1));
+        lines[j].position = sf::Vector2f(target.mapCoordsToPixel(column_coordinate, m_cartesianPlane));
+        lines[j].color = m_color2;
+    }
+
+    target.draw(lines); // Draw the vertexArray when the loop is finished
+}
+
+
+/* fixed above
+void Particle::draw(RenderTarget& target, RenderStates states) const
+{
+    VertexArray lines(TriangleFan, m_numPoints + 1);
+    Vector2f center(target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane));
+    lines[0].position = center;
+    lines[0].color = m_color1;
     for (int j = 1; j < m_numPoints; j++)
     {
         Vector2f coords(m_A(0, j-1), m_A(1, j-1));
@@ -43,6 +62,7 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
     }
     target.draw(lines);
 }
+*/
 
 void Particle::update(float dt) {
     //looping happens in the engine.cpp
