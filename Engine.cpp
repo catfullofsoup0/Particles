@@ -40,12 +40,15 @@ void Engine::input() {
 }
 
 void Engine::update(float dtAsSeconds) {
-    for (auto it = m_particles.begin(); it != m_particles.end();) {
+    // Iterate through m_particles and update each one
+    for (auto it = m_particles.begin(); it != m_particles.end(); ) {
+        // If the particle's TTL is still valid, update it
         if (it->getTTL() > 0.0) {
             it->update(dtAsSeconds);
-            ++it;
+            ++it; // Move to the next particle
         }
         else {
+            // If TTL is expired, remove the particle and update the iterator
             it = m_particles.erase(it);
         }
     }
