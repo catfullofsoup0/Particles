@@ -48,7 +48,21 @@ void Particle::draw(RenderTarget& target, RenderStates states) const
 // Emily's work ends here
 
 // Cheema pls do update() function
+void Particle::update(float dt) {
+    //looping happens in the engine.cpp
+    m_ttl -= dt; // Reduce time-to-live
 
+    // Apply transformations
+    rotate(dt * m_radiansPerSec);
+    scale(SCALE);
+
+    // Update position with velocity and gravity
+    float dx = m_vx * dt;
+    m_vy -= G * dt; // Gravity effect
+    float dy = m_vy * dt;
+
+    translate(dx, dy);
+}
 
 bool Particle::almostEqual(double a, double b, double eps)
 {
