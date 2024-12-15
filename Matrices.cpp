@@ -4,15 +4,16 @@ namespace Matrices
 {
 	Matrix::Matrix(int _rows, int _cols)
 	{
-		this->rows = 0;
-		this->cols = 0;
+		this->rows = _rows; // Set rows and cols to the provided dimensions
+		this->cols = _cols;
 
-		a.resize(rows);
+		a.resize(rows); // Resize the outer vector to match the number of rows
 		for (int i = 0; i < rows; ++i)
 		{
-			a[i].resize(cols, 0);
+			a[i].resize(cols, 0); // Resize each inner vector to match the number of columns
 		}
 	}
+
 	///Add each corresponding element.
 	///usage:  c = a + b;
 	Matrix operator+(const Matrix& a, const Matrix& b)
@@ -104,7 +105,7 @@ namespace Matrices
 		for (int i = 0; i < nCols; i++) {
 			// Set the value of the first row (x-coordinates) for each column
 			a[0][i] = xShift;
-			a[1][0] = yShift;
+			a[1][i] = yShift;
 			
 		}
 	}
