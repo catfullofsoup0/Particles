@@ -63,6 +63,26 @@ void Particle::update(float dt) {
 
     translate(dx, dy);
 }
+//the other three
+void Particle::rotate(double theta) {
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y); // Move to origin
+    m_A = RotationMatrix(theta) * m_A;                      // Rotate
+    translate(temp.x, temp.y);                              // Move back
+}
+
+void Particle::scale(double c) {
+    Vector2f temp = m_centerCoordinate;
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y); // Move to origin
+    m_A = ScalingMatrix(c) * m_A;                           // Scale
+    translate(temp.x, temp.y);                              // Move back
+}
+
+void Particle::translate(double xShift, double yShift) {
+    m_A = TranslationMatrix(xShift, yShift, m_A.getCols()) + m_A; // Translate vertices
+    m_centerCoordinate.x += xShift;                              // Update center
+    m_centerCoordinate.y += yShift;
+}
 
 bool Particle::almostEqual(double a, double b, double eps)
 {
