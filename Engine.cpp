@@ -54,6 +54,7 @@ void Engine::update(float dtAsSeconds) {
     }
 }
 
+
 void Engine::draw() {
     m_Window.clear();
     for (const auto& particle : m_particles) {
